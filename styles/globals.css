@@ -36,13 +36,15 @@ main { overflow: hidden; }
 .darkText { color: var(--gold-dark); }
 h1, h2, h3, p { margin-top: 0; }
 h1, h2, h3 { font-family: 'Playfair Display', Georgia, serif; letter-spacing: -0.045em; }
-h1 { max-width: 850px; margin-bottom: 28px; font-size: clamp(54px, 8vw, 108px); line-height: .94; font-weight: 900; color: var(--chrome); }
+h1 { max-width: 900px; margin-bottom: 28px; font-size: clamp(54px, 8vw, 104px); line-height: .94; font-weight: 900; color: var(--chrome); }
 h2 { margin-bottom: 22px; font-size: clamp(36px, 5vw, 72px); line-height: .98; font-weight: 900; }
 h3 { margin-bottom: 12px; font-size: 25px; line-height: 1.08; font-weight: 800; }
-.lede { max-width: 650px; margin-bottom: 34px; font-size: clamp(18px, 2vw, 22px); line-height: 1.6; color: var(--muted); }
+.lede { max-width: 690px; margin-bottom: 34px; font-size: clamp(18px, 2vw, 22px); line-height: 1.6; color: var(--muted); }
 .bodyLarge { font-size: clamp(18px, 2vw, 22px); line-height: 1.65; color: var(--muted-dark); }
+.sectionIntro { max-width: 760px; margin: -4px 0 40px; font-size: 19px; line-height: 1.7; color: var(--muted-dark); }
+.lightIntro { color: var(--muted); }
 .actions { display: flex; flex-wrap: wrap; gap: 14px; }
-.button { display: inline-flex; align-items: center; justify-content: center; min-height: 50px; padding: 0 22px; border: 1px solid rgba(201,169,97,.38); font-size: 13px; font-weight: 900; letter-spacing: .02em; cursor: pointer; }
+.button { display: inline-flex; align-items: center; justify-content: center; min-height: 50px; padding: 0 22px; border: 1px solid rgba(201,169,97,.38); font-size: 13px; font-weight: 900; letter-spacing: .02em; cursor: pointer; transition: transform .2s ease, border-color .2s ease; }
 .button:hover { transform: translateY(-2px); }
 .primary { background: var(--gold); color: var(--obsidian); border-color: var(--gold); }
 .ghost { color: var(--gold-light); background: transparent; }
@@ -57,20 +59,35 @@ h3 { margin-bottom: 12px; font-size: 25px; line-height: 1.08; font-weight: 800; 
 .processGrid { margin-top: 46px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
 .processCard { min-height: 250px; padding: 24px; border: 1px solid rgba(201,169,97,.18); background: rgba(255,255,255,.025); }
 .processCard span { display: block; margin-bottom: 36px; color: rgba(201,169,97,.62); font-weight: 900; }
-.processCard p, .lightCard p, .proofList p { line-height: 1.65; color: var(--muted); }
+.processCard p, .lightCard p, .proofList p, .portfolioCard p { line-height: 1.65; color: var(--muted); }
 .cardGrid { margin-top: 40px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.serviceGrid, .audienceGrid { grid-template-columns: repeat(3, 1fr); }
 .lightCard { padding: 28px; border: 1px solid var(--border); background: rgba(255,255,255,.56); }
 .lightCard p { color: var(--muted-dark); }
 .proofList { display: grid; gap: 12px; }
 .proofList p { margin: 0; padding: 18px 20px; border: 1px solid rgba(201,169,97,.18); background: rgba(255,255,255,.025); font-weight: 700; color: var(--chrome); }
+.portfolioGrid { margin-top: 42px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.portfolioCard { min-height: 270px; padding: 28px; border: 1px solid rgba(201,169,97,.18); background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.015)); display: flex; flex-direction: column; justify-content: space-between; }
+.portfolioCard span { width: fit-content; padding: 7px 10px; border: 1px solid rgba(201,169,97,.28); color: var(--gold-light); font-size: 11px; font-weight: 900; letter-spacing: .16em; }
+.portfolioCard h3 { margin-top: 42px; color: var(--chrome); }
+
+.newsletterSection { border-top: 1px solid rgba(201,169,97,.12); border-bottom: 1px solid rgba(201,169,97,.12); }
+.newsletterGrid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 70px; align-items: center; }
+.subscribeForm { padding: 30px; border: 1px solid rgba(201,169,97,.22); background: rgba(255,255,255,.035); }
+.subscribeForm label { display: block; margin-bottom: 12px; color: var(--gold-light); font-size: 12px; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; }
+.subscribeRow { display: grid; grid-template-columns: 1fr auto; gap: 12px; }
+.formNote { margin: 14px 0 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+
 .auditGrid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 70px; align-items: start; }
 .auditForm { display: grid; gap: 14px; padding: 30px; border: 1px solid rgba(201,169,97,.22); background: rgba(255,255,255,.03); }
+.lightForm { background: rgba(10,9,8,.04); border-color: var(--border); }
 input, textarea, select { width: 100%; border: 1px solid rgba(212,212,210,.16); background: rgba(10,9,8,.58); color: var(--chrome); padding: 15px 16px; font: inherit; outline: none; }
+.cream input, .cream textarea, .cream select { background: rgba(255,255,255,.72); color: var(--obsidian); border-color: var(--border); }
 input:focus, textarea:focus, select:focus { border-color: var(--gold); }
 textarea { resize: vertical; }
 .footer { padding: 34px 0; border-top: 1px solid rgba(201,169,97,.16); background: var(--obsidian); color: var(--muted); }
 .footer .container { display: flex; justify-content: space-between; gap: 20px; }
 .footer strong { color: var(--gold-light); }
 
-@media (max-width: 980px) { .heroGrid, .split, .auditGrid { grid-template-columns: 1fr; } .processGrid, .cardGrid { grid-template-columns: 1fr 1fr; } .heroPanel { min-height: 420px; } }
-@media (max-width: 640px) { .navLinks { display: none; } h1 { font-size: 48px; } .padded { padding: 78px 0; } .processGrid, .cardGrid { grid-template-columns: 1fr; } .footer .container { flex-direction: column; } }
+@media (max-width: 980px) { .heroGrid, .split, .auditGrid, .newsletterGrid { grid-template-columns: 1fr; } .processGrid, .cardGrid, .serviceGrid, .audienceGrid, .portfolioGrid { grid-template-columns: 1fr 1fr; } .heroPanel { min-height: 420px; } }
+@media (max-width: 640px) { .navLinks { display: none; } h1 { font-size: 48px; } .padded { padding: 78px 0; } .processGrid, .cardGrid, .serviceGrid, .audienceGrid, .portfolioGrid { grid-template-columns: 1fr; } .subscribeRow { grid-template-columns: 1fr; } .footer .container { flex-direction: column; } }
