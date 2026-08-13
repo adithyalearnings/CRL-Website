@@ -1,283 +1,385 @@
-import { useEffect, useState } from 'react';
+import Head from 'next/head';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
-const services = [
-  ['01', 'Cinematic Brand Films', 'Brand stories, product films, founder films, campaign films and lifestyle-led visual concepts for modern consumer brands.'],
-  ['02', 'AI-Powered Campaign Worlds', 'Visual universes, moodboards, key frames, character references and campaign routes for launches and brand moments.'],
-  ['03', 'Storyboards and Previsualization', 'Director-style storyboards, shot breakdowns, camera movement references and treatment visuals for production teams.'],
-  ['04', 'Character, World and IP Development', 'Identity boards, expression sheets, worldbuilding, recurring characters and original IP systems for long-term stories.'],
-  ['05', 'Product Storytelling Systems', 'Product-led films, UGC-style variations, performance creative routes and repeatable visual content systems.'],
-  ['06', 'AI Video Prompting Systems', 'Multi-shot prompts, character consistency prompts, storyboard-to-video direction and platform-specific AI production systems.']
-];
-
-const process = [
-  ['01', 'Shape', 'We turn a raw idea, brand problem or script into a sharper creative direction.'],
-  ['02', 'Visualize', 'We build the world: references, key frames, characters, environments and mood.'],
-  ['03', 'Storyboard', 'We map the sequence with shots, camera movement, pacing and production logic.'],
-  ['04', 'Produce', 'We create AI-assisted content assets, films, prompts, frames and campaign variations.'],
-  ['05', 'Systemize', 'We turn one creative direction into a repeatable system for future stories.']
+const work = [
+  ['01', 'BRAND FILMS', 'Story / Film / AI'],
+  ['02', 'CAMPAIGN WORLDS', 'Launch / World / System'],
+  ['03', 'CHARACTER IP', 'Identity / Story / Continuity'],
+  ['04', 'PREVIS', 'Frames / Camera / Sequence'],
+  ['05', 'PRODUCT STORIES', 'D2C / FMCG / Film']
 ];
 
 const capabilities = [
-  ['Brand Films', 'Founder films, product launch films, lifestyle films, festive campaigns and premium product stories.'],
-  ['Campaign Worlds', 'FMCG launch worlds, skincare campaign universes, fashion drops, wellness stories and digital-first brand moments.'],
-  ['Production Previsualization', 'Ad film storyboards, music video treatments, short film key frames, pitch decks and scene-by-scene visual plans.'],
-  ['Character and IP Development', 'AI influencers, mythological worlds, anime-inspired sports characters, mascots and recurring story formats.'],
-  ['AI Video Experiments', 'Multi-shot AI videos, stylized product films, trailers, action sequences and visual style explorations.'],
-  ['Product Storytelling', 'Skincare stories, FMCG scenes, fashion product films, food and beverage campaigns and UGC-style product narratives.']
+  ['CINEMATIC BRAND FILMS', 'Film-strip geometry, wide cinematic frames and title-sequence pacing.'],
+  ['CAMPAIGN WORLDS', 'Expandable visual universes designed to carry launches, formats and recurring stories.'],
+  ['PREVISUALIZATION', 'Storyboards, camera logic, shot systems and pitch-ready visual sequences.'],
+  ['CHARACTER + IP', 'Identity systems, reference logic and recurring worlds built for continuity.'],
+  ['PRODUCT STORYTELLING', 'Premium product narratives, performance variations and D2C visual systems.'],
+  ['AI VIDEO SYSTEMS', 'Multi-shot prompting, visual locks and repeatable AI production workflows.']
 ];
 
-const specWorlds = [
-  ['Neon Sutra', 'Original IP / Cyberpunk World', 'A cinematic sci-fi story world built around characters, environments, key frames and long-form episode potential.'],
-  ['Mythic Sequence', 'Storyboard / Previsualization', 'A mythological cinematic sequence developed with visual beats, divine atmosphere, camera logic and AI video direction.'],
-  ['Product Ritual', 'Brand Film System', 'A premium product-story world designed for FMCG and D2C brands that need cinematic content beyond basic ads.']
+const process = [
+  ['01', 'SHAPE', 'We sharpen the raw idea, brief or script into one clear creative direction.'],
+  ['02', 'VISUALIZE', 'We build the visual world: references, key frames, characters and environments.'],
+  ['03', 'STORYBOARD', 'We map shots, camera movement, pacing, continuity and production logic.'],
+  ['04', 'PRODUCE', 'We create AI-assisted films, frames, prompts and campaign variations.'],
+  ['05', 'SYSTEMIZE', 'We turn the direction into a repeatable content system for future stories.']
 ];
 
 const audiences = [
-  ['D2C and FMCG Brands', 'For brands that need cinematic product stories, campaign films, founder-led content and scalable visual assets.'],
-  ['Agencies and Creative Studios', 'For teams that need faster pitch visuals, concept routes, mood films, storyboards and AI-assisted production support.'],
-  ['Production Houses', 'For production teams that need previsualization, treatment frames, character references and cinematic concept development.'],
-  ['Filmmakers and Storytellers', 'For creators building short films, music videos, visual worlds, characters, mythological stories or original IP.']
+  ['D2C + FMCG BRANDS', 'Cinematic product stories, launches, founder films and scalable visual systems.'],
+  ['AGENCIES + CREATIVE STUDIOS', 'Pitch worlds, storyboards, concept routes and AI-assisted production support.'],
+  ['PRODUCTION HOUSES', 'Previsualization, treatment frames, character references and visual development.'],
+  ['FILMMAKERS + STORYTELLERS', 'Original IP, films, characters, music-video worlds and cinematic experiments.']
 ];
 
 const faqs = [
-  ['Can CRL work alongside an existing agency or production house?', 'Yes. CRL can operate as a specialist creative and previsualization layer, supporting the team with concepts, storyboards, visual worlds, AI production systems and selected final assets.'],
-  ['Do you provide concepts and storyboards, or only AI production?', 'Both. Engagements can begin with a raw idea, an existing script or an approved campaign. CRL can shape the concept, build references, storyboard the sequence and produce AI-assisted assets.'],
-  ['Can a project combine real footage and AI-generated visuals?', 'Yes. The workflow can be designed for fully AI-generated films, hybrid productions, previsualization for traditional shoots, or AI-supported post-production and campaign variations.'],
-  ['How do you maintain character and product consistency?', 'We build reference systems before production: identity boards, visual rules, product locks, shot continuity notes and platform-specific prompts.'],
-  ['Can one creative direction become multiple formats?', 'Yes. A single world can be extended into hero films, cutdowns, social edits, product visuals, storyboards, pitch frames and repeatable campaign routes.']
+  ['Can CRL work alongside an existing agency or production house?', 'Yes. CRL can operate as a specialist creative, previsualization and AI-production layer inside an existing team.'],
+  ['Do you provide concepts and storyboards, or only AI production?', 'Both. We can enter at raw idea, approved script or production stage and build the layer that is missing.'],
+  ['Can a project combine real footage and AI-generated visuals?', 'Yes. Workflows can be fully AI, hybrid, previsualization-first or designed to extend existing live-action production.'],
+  ['How do you maintain character and product consistency?', 'We create reference systems first: identity boards, product locks, visual rules, continuity notes and platform-specific prompts.'],
+  ['Can one creative direction become multiple formats?', 'Yes. A single world can extend into hero films, cutdowns, social edits, product visuals, pitch frames and recurring campaign routes.']
 ];
 
-const vimeoSource = 'https://player.vimeo.com/video/1209432165?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&muted=1&loop=1&background=1';
+const specWorlds = [
+  ['NEON SUTRA', 'ORIGINAL IP / WORLD 01'],
+  ['MYTHIC SEQUENCE', 'PREVIS / WORLD 02'],
+  ['PRODUCT RITUAL', 'BRAND FILM / WORLD 03']
+];
 
 export default function Home() {
-  const [activeService, setActiveService] = useState(0);
+  const root = useRef<HTMLElement | null>(null);
+  const [activeCapability, setActiveCapability] = useState(0);
+  const [activeProcess, setActiveProcess] = useState(0);
+  const [cursorLabel, setCursorLabel] = useState('');
+  const [navDark, setNavDark] = useState(true);
+
+  const capSceneClass = useMemo(() => `cap-scene cap-scene-${activeCapability + 1}`, [activeCapability]);
 
   useEffect(() => {
-    const elements = Array.from(document.querySelectorAll<HTMLElement>('.reveal'));
-    if (!('IntersectionObserver' in window)) {
-      elements.forEach((element) => element.classList.add('isVisible'));
-      return;
-    }
+    let alive = true;
+    let destroy = () => {};
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('isVisible');
-          observer.unobserve(entry.target);
+    const boot = async () => {
+      const gsapModule = await import('gsap');
+      const triggerModule = await import('gsap/ScrollTrigger');
+      const lenisModule = await import('lenis');
+      if (!alive) return;
+
+      const gsap = gsapModule.gsap;
+      const ScrollTrigger = triggerModule.ScrollTrigger;
+      const Lenis = lenisModule.default;
+      gsap.registerPlugin(ScrollTrigger);
+
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const desktop = window.matchMedia('(min-width: 900px)').matches;
+      let lenis: InstanceType<typeof Lenis> | null = null;
+      let ticker: ((time: number) => void) | null = null;
+
+      if (!reduceMotion) {
+        lenis = new Lenis({ lerp: 0.085, smoothWheel: true, wheelMultiplier: 0.9 });
+        lenis.on('scroll', ScrollTrigger.update);
+        ticker = (time: number) => lenis?.raf(time * 1000);
+        gsap.ticker.add(ticker);
+        gsap.ticker.lagSmoothing(0);
+      }
+
+      const ctx = gsap.context(() => {
+        if (reduceMotion) return;
+
+        gsap.to('.ambient-grid', { backgroundPosition: '120px 80px', duration: 18, repeat: -1, ease: 'none' });
+        gsap.to('.ambient-orbit', { rotate: 360, duration: 32, repeat: -1, ease: 'none' });
+        gsap.to('.hero-frame.float-a', { y: -18, rotate: 4, duration: 4.8, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+        gsap.to('.hero-frame.float-b', { y: 22, rotate: -6, duration: 6.2, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+        gsap.to('.hero-frame.float-c', { x: 16, y: -12, duration: 5.5, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+
+        const hero = gsap.timeline({
+          scrollTrigger: { trigger: '.hero', start: 'top top', end: '+=130%', scrub: 1 }
+        });
+        hero
+          .to('.hero-word-build', { yPercent: -90, opacity: 0.12 }, 0)
+          .to('.hero-word-cinematic', { scaleX: 1.12, letterSpacing: '-0.085em' }, 0)
+          .to('.hero-word-worlds', { scale: 1.34, transformOrigin: '50% 50%' }, 0)
+          .to('.portal-frame', { scale: 7.5, borderWidth: 0.5, opacity: 1 }, 0.25)
+          .to('.hero-meta', { opacity: 0, y: -30 }, 0.15);
+
+        const manifestoWords = gsap.utils.toArray<HTMLElement>('.manifesto-word');
+        const manifestoTl = gsap.timeline({
+          scrollTrigger: { trigger: '.manifesto', start: 'top top', end: '+=280%', pin: '.manifesto-stage', scrub: 1 }
+        });
+        manifestoWords.forEach((word, index) => {
+          manifestoTl.fromTo(word,
+            { opacity: index === 0 ? 1 : 0, xPercent: index % 2 ? 12 : -12, scale: 0.78 },
+            { opacity: 1, xPercent: 0, scale: 1, duration: 0.45 },
+            index * 0.58
+          );
+          if (index < manifestoWords.length - 1) {
+            manifestoTl.to(word, { opacity: 0.08, xPercent: index % 2 ? -22 : 22, scale: 1.1, duration: 0.38 }, index * 0.58 + 0.45);
+          }
+        });
+        manifestoTl.to('.manifesto-word:last-child', { scale: 1.35, letterSpacing: '-0.09em', duration: 0.5 }, '>-0.1');
+        manifestoTl.to('.system-blocks span', { opacity: 1, scale: 1, stagger: 0.04, duration: 0.35 }, '<');
+
+        if (desktop) {
+          const panels = gsap.utils.toArray<HTMLElement>('.work-panel');
+          const workTween = gsap.to('.work-track', {
+            xPercent: -80,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.work-world',
+              start: 'top top',
+              end: () => `+=${window.innerWidth * 4.2}`,
+              pin: true,
+              scrub: 0.8,
+              onUpdate: (self) => {
+                const tilt = Math.max(-3.5, Math.min(3.5, self.getVelocity() / -700));
+                gsap.to('.work-art', { rotateY: tilt, duration: 0.35, overwrite: true });
+              }
+            }
+          });
+          panels.forEach((panel) => {
+            gsap.fromTo(panel, { opacity: 0.48, scale: 0.94 }, {
+              opacity: 1,
+              scale: 1,
+              scrollTrigger: { trigger: panel, containerAnimation: workTween, start: 'left 68%', end: 'right 32%', scrub: true }
+            });
+          });
         }
-      });
-    }, { threshold: 0.14 });
 
-    elements.forEach((element) => observer.observe(element));
-    return () => observer.disconnect();
+        gsap.utils.toArray<HTMLElement>('.chapter').forEach((chapter) => {
+          const shapes = chapter.querySelectorAll('.parallax-shape');
+          if (!shapes.length) return;
+          gsap.fromTo(shapes, { yPercent: 16 }, {
+            yPercent: -16,
+            stagger: 0.06,
+            ease: 'none',
+            scrollTrigger: { trigger: chapter, start: 'top bottom', end: 'bottom top', scrub: 1.2 }
+          });
+        });
+
+        gsap.from('.previs-cell', {
+          clipPath: 'inset(50% 50% 50% 50%)',
+          opacity: 0,
+          stagger: 0.08,
+          scrollTrigger: { trigger: '.previs-grid', start: 'top 72%', end: 'center 45%', scrub: 1 }
+        });
+
+        const processSteps = gsap.utils.toArray<HTMLElement>('.process-step');
+        processSteps.forEach((step, index) => {
+          ScrollTrigger.create({
+            trigger: step,
+            start: 'top center',
+            end: 'bottom center',
+            onToggle: (self) => self.isActive && setActiveProcess(index)
+          });
+        });
+        gsap.to('.process-ring', { rotate: 220, ease: 'none', scrollTrigger: { trigger: '.process', start: 'top bottom', end: 'bottom top', scrub: 1 } });
+        gsap.to('.process-line-fill', { scaleY: 1, transformOrigin: 'top', ease: 'none', scrollTrigger: { trigger: '.process-copy', start: 'top 55%', end: 'bottom 55%', scrub: true } });
+
+        gsap.utils.toArray<HTMLElement>('.spec-frame').forEach((frame, index) => {
+          gsap.fromTo(frame, { y: 90 + index * 20, rotate: index % 2 ? 7 : -6 }, {
+            y: -30,
+            rotate: index % 2 ? 2 : -2,
+            ease: 'none',
+            scrollTrigger: { trigger: '.spec-worlds', start: 'top bottom', end: 'bottom top', scrub: 1.1 }
+          });
+        });
+
+        gsap.from('.cta-fragment', {
+          x: () => gsap.utils.random(-420, 420),
+          y: () => gsap.utils.random(-260, 260),
+          rotate: () => gsap.utils.random(-60, 60),
+          opacity: 0,
+          stagger: 0.05,
+          scrollTrigger: { trigger: '.final-cta', start: 'top 78%', end: 'center 55%', scrub: 1 }
+        });
+      }, root);
+
+      const darkSections = Array.from(document.querySelectorAll<HTMLElement>('[data-nav="dark"]'));
+      const navObserver = new IntersectionObserver((entries) => {
+        const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setNavDark((visible.target as HTMLElement).dataset.nav === 'dark');
+      }, { threshold: [0.2, 0.45, 0.7] });
+      darkSections.forEach((section) => navObserver.observe(section));
+      document.querySelectorAll<HTMLElement>('[data-nav="light"]').forEach((section) => navObserver.observe(section));
+
+      let moveHandler: ((event: MouseEvent) => void) | null = null;
+      if (desktop) {
+        const dot = document.querySelector<HTMLElement>('.cursor-dot');
+        const follower = document.querySelector<HTMLElement>('.cursor-follower');
+        const frames = gsap.utils.toArray<HTMLElement>('.mouse-frame');
+        const dotX = dot ? gsap.quickTo(dot, 'x', { duration: 0.16, ease: 'power3' }) : null;
+        const dotY = dot ? gsap.quickTo(dot, 'y', { duration: 0.16, ease: 'power3' }) : null;
+        const followX = follower ? gsap.quickTo(follower, 'x', { duration: 0.42, ease: 'power3' }) : null;
+        const followY = follower ? gsap.quickTo(follower, 'y', { duration: 0.42, ease: 'power3' }) : null;
+        moveHandler = (event: MouseEvent) => {
+          dotX?.(event.clientX); dotY?.(event.clientY); followX?.(event.clientX); followY?.(event.clientY);
+          const nx = event.clientX / window.innerWidth - 0.5;
+          const ny = event.clientY / window.innerHeight - 0.5;
+          frames.forEach((frame, index) => gsap.to(frame, { x: nx * (10 + index * 4), y: ny * (8 + index * 3), duration: 0.8, overwrite: true }));
+          gsap.to('.hero-glow', { x: nx * 90, y: ny * 70, duration: 0.9, overwrite: true });
+        };
+        window.addEventListener('mousemove', moveHandler, { passive: true });
+      }
+
+      ScrollTrigger.refresh();
+      destroy = () => {
+        navObserver.disconnect();
+        if (moveHandler) window.removeEventListener('mousemove', moveHandler);
+        if (ticker) gsap.ticker.remove(ticker);
+        lenis?.destroy();
+        ctx.revert();
+      };
+    };
+
+    boot();
+    return () => { alive = false; destroy(); };
   }, []);
 
   return (
-    <main>
-      <nav className="nav">
-        <a className="mark" href="#top">CRL</a>
-        <div className="navLinks">
-          <a href="#work">Work</a>
-          <a href="#capabilities">Capabilities</a>
-          <a href="#services">Services</a>
-          <a href="#resources">Resources</a>
-          <a href="#audit">Start</a>
+    <main ref={root} className="site-shell">
+      <Head>
+        <title>Creative ROI Lab — Cinematic Worlds & AI Story Systems</title>
+        <meta name="description" content="Creative ROI Lab builds cinematic brand films, campaign worlds, character IP, previsualization and AI video systems for modern brands and production teams." />
+      </Head>
+
+      <div className="cursor-dot" aria-hidden="true" />
+      <div className={`cursor-follower ${cursorLabel ? 'has-label' : ''}`} aria-hidden="true"><span>{cursorLabel}</span></div>
+
+      <nav className={`nav ${navDark ? 'nav-on-dark' : 'nav-on-light'}`}>
+        <a className="nav-mark" href="#top">CRL</a>
+        <div className="nav-links">
+          <a href="#work">WORK</a><a href="#capabilities">CAPABILITIES</a><a href="#process">PROCESS</a><a href="#start">START</a>
         </div>
       </nav>
 
-      <section id="top" className="hero dark">
-        <div className="glow" />
-        <div className="container heroGrid">
-          <div className="reveal isVisible">
-            <p className="eyebrow">Creative ROI Lab · Cinematic AI storytelling studio</p>
-            <h1>Cinematic AI stories for brands, agencies and production houses.</h1>
-            <p className="lede">CRL helps teams turn ideas into cinematic worlds, brand films, storyboards, character systems, campaign routes and AI-powered visual content systems.</p>
-            <div className="actions">
-              <a className="button primary" href="#audit">Start a Creative Build</a>
-              <a className="button ghost" href="#work">Watch Selected Work</a>
-            </div>
-          </div>
+      <section id="top" className="hero chapter" data-nav="dark">
+        <div className="ambient-grid" /><div className="hero-glow" /><div className="ambient-orbit" />
+        <div className="hero-meta technical"><span>CREATIVE ROI LAB</span><span>STORY SYSTEM / ACTIVE</span><span>FRAME 0001</span></div>
+        <div className="hero-type">
+          <span className="hero-word hero-word-build">WE BUILD</span>
+          <span className="hero-word hero-word-cinematic">CINEMATIC</span>
+          <span className="hero-word hero-word-worlds">WORLDS.</span>
+        </div>
+        <div className="hero-frame mouse-frame float-a"><span>CRL / 01</span></div>
+        <div className="hero-frame mouse-frame float-b chrome-frame"><span>VISUAL SYSTEM</span></div>
+        <div className="hero-frame mouse-frame float-c glass-frame"><span>SEQUENCE</span></div>
+        <div className="portal-frame mouse-frame" />
+        <div className="hero-foot technical"><span>AI CREATIVE STUDIO</span><span>BUILDING CONTENT INFRASTRUCTURE FOR D2C BRANDS</span><span>SCROLL TO ENTER ↓</span></div>
+      </section>
 
-          <div className="heroFilm reveal isVisible">
-            <iframe
-              src={vimeoSource}
-              frameBorder="0"
-              allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              title="Ayurveda AI brand film"
-            />
-            <div className="filmShade" />
-            <div className="filmLabel"><span>Featured Film</span><strong>Ayurveda</strong></div>
-            <div className="filmIndex">01 / CRL FILMS</div>
+      <section className="manifesto chapter" data-nav="dark">
+        <div className="manifesto-stage">
+          <div className="manifesto-lines" aria-hidden="true"><span /><span /><span /><span /></div>
+          <p className="scene-kicker">THE CREATIVE LAYER / 01</p>
+          <div className="manifesto-stack" aria-label="Story. World. Character. Sequence. System.">
+            {['STORY.', 'WORLD.', 'CHARACTER.', 'SEQUENCE.', 'SYSTEM.'].map((word) => <span className="manifesto-word" key={word}>{word}</span>)}
           </div>
+          <p className="manifesto-copy">CRL turns ideas into coherent films, campaign worlds, characters, storyboards and repeatable content systems — so creative does not stop at one asset.</p>
+          <div className="system-blocks" aria-hidden="true">{Array.from({ length: 12 }).map((_, i) => <span key={i} />)}</div>
         </div>
       </section>
 
-      <div className="marquee" aria-hidden="true">
-        <div className="marqueeTrack">
-          <span>Brand Films</span><span>Campaign Worlds</span><span>Storyboards</span><span>Character IP</span><span>AI Video Systems</span><span>Product Stories</span><span>Production Previsualization</span>
-          <span>Brand Films</span><span>Campaign Worlds</span><span>Storyboards</span><span>Character IP</span><span>AI Video Systems</span><span>Product Stories</span><span>Production Previsualization</span>
+      <section id="work" className="work-world chapter" data-nav="dark" onMouseEnter={() => setCursorLabel('VIEW')} onMouseLeave={() => setCursorLabel('')}>
+        <div className="work-track">
+          {work.map((item, index) => (
+            <article className="work-panel" key={item[0]}>
+              <div className="work-number">{item[0]}</div>
+              <div className="work-copy"><p className="technical">CRL / {item[0]} · FRAME 0{24 + index * 7}</p><h2>{item[1]}</h2><p>{item[2]}</p></div>
+              <div className={`work-art work-art-${index + 1}`}><span className="frame-outline" /><span className="frame-outline second" /><span className="frame-dot" /></div>
+            </article>
+          ))}
         </div>
-      </div>
-
-      <section className="cream manifestoSection">
-        <div className="container manifestoGrid reveal">
-          <p className="eyebrow darkText">The Creative Layer</p>
-          <div className="manifestoWords">
-            <span>Story.</span><span>World.</span><span>Character.</span><span>Sequence.</span><span className="goldWord">System.</span>
-          </div>
-          <p className="bodyLarge manifestoCopy">We shape the creative layer before production begins, so one idea can become a coherent film, campaign world, pitch, character system and repeatable content engine.</p>
-        </div>
+        <div className="work-index technical">SELECTED WORK / HORIZONTAL WORLD / 02</div>
       </section>
 
-      <section id="work" className="dark padded selectedWorkSection">
-        <div className="container">
-          <div className="workIntro reveal">
-            <p className="eyebrow">Selected Films & Worlds</p>
-            <h2>The work should be the first proof.</h2>
-            <p className="sectionIntro lightIntro">A growing collection of films, visual worlds, storyboards and original concept builds. More projects can be added to this same media system later.</p>
-          </div>
-
-          <article className="featuredProject reveal">
-            <div className="featuredMedia">
-              <iframe
-                src={vimeoSource}
-                frameBorder="0"
-                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                loading="lazy"
-                title="Ayurveda AI brand film portfolio presentation"
-              />
-            </div>
-            <div className="featuredMeta">
-              <div><span>01</span><p>AI Wellness Film · Brand Story</p></div>
-              <h3>Ayurveda</h3>
-              <p>A cinematic visual exploration built around wellness, ritual and premium brand atmosphere using an AI-assisted production workflow.</p>
-              <a href="#audit">Build something with this visual depth →</a>
-            </div>
-          </article>
-
-          <div className="projectRail reveal" aria-label="CRL project directions">
-            <div><span>02</span><strong>Campaign Worlds</strong><small>Launch systems · Visual universes</small></div>
-            <div><span>03</span><strong>Character IP</strong><small>Identity boards · Recurring worlds</small></div>
-            <div><span>04</span><strong>Previsualization</strong><small>Storyboards · Pitch-ready frames</small></div>
-            <div><span>05</span><strong>Product Stories</strong><small>D2C · FMCG · Lifestyle films</small></div>
-          </div>
-        </div>
-      </section>
-
-      <section id="capabilities" className="cream padded">
-        <div className="container">
-          <p className="eyebrow darkText reveal">Capabilities</p>
-          <h2 className="reveal">What the studio can build around an idea.</h2>
-          <div className="capabilityGrid">
+      <section id="capabilities" className="capabilities chapter" data-nav="dark">
+        <div className="cap-noise" />
+        <div className="cap-copy">
+          <p className="scene-kicker">CAPABILITIES / 03</p>
+          <div className="cap-list">
             {capabilities.map((item, index) => (
-              <div className={`capabilityCard reveal ${index === 0 || index === 3 ? 'wideCapability' : ''}`} key={item[0]}>
-                <span>0{index + 1}</span><h3>{item[0]}</h3><p>{item[1]}</p><a href="#audit">Explore this capability →</a>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="services" className="dark padded interactiveServices">
-        <div className="container serviceExperience">
-          <div className="servicePreview reveal">
-            <p className="eyebrow">What We Create</p>
-            <div className="previewNumber">/{services[activeService][0]}</div>
-            <h2>{services[activeService][1]}</h2>
-            <p>{services[activeService][2]}</p>
-            <div className="previewTags"><span>Story</span><span>Direction</span><span>AI Production</span></div>
-          </div>
-          <div className="serviceRows darkServiceRows reveal">
-            {services.map((item, index) => (
-              <button
-                className={`serviceRow ${activeService === index ? 'activeService' : ''}`}
-                key={item[0]}
-                onMouseEnter={() => setActiveService(index)}
-                onFocus={() => setActiveService(index)}
-                type="button"
-              >
-                <span className="serviceNum">/{item[0]}</span><h3>{item[1]}</h3><span className="serviceArrow">→</span>
+              <button key={item[0]} className={activeCapability === index ? 'active' : ''} onMouseEnter={() => { setActiveCapability(index); setCursorLabel('OPEN'); }} onMouseLeave={() => setCursorLabel('')} onFocus={() => setActiveCapability(index)}>
+                <span>0{index + 1}</span>{item[0]}
               </button>
             ))}
           </div>
+          <p className="cap-description">{capabilities[activeCapability][1]}</p>
         </div>
+        <div className={capSceneClass} aria-hidden="true">
+          <div className="scene-core" /><div className="scene-frame scene-frame-a" /><div className="scene-frame scene-frame-b" /><div className="scene-frame scene-frame-c" />
+          <div className="scene-orbit" /><div className="scene-node node-a" /><div className="scene-node node-b" />
+          <span className="scene-ghost">WORLD WORLD WORLD</span>
+        </div>
+        <div className="vertical-label technical">CRL / VISUAL SYSTEM ACTIVE</div>
       </section>
 
-      <section id="spec" className="dark padded specSection">
-        <div className="container">
-          <p className="eyebrow reveal">Spec Worlds</p>
-          <h2 className="reveal">Original worlds that show how CRL thinks.</h2>
-          <p className="sectionIntro lightIntro reveal">Spec worlds demonstrate cinematic taste, story development, storyboard thinking and AI production workflows before a client brief begins.</p>
-          <div className="specGrid">
-            {specWorlds.map((item) => <div className="specCard reveal" key={item[0]}><p>{item[1]}</p><h3>{item[0]}</h3><span>{item[2]}</span><a href="#audit">Build something similar →</a></div>)}
+      <section className="product chapter" data-nav="dark">
+        <div className="product-copy"><p className="scene-kicker">PRODUCT STORYTELLING / 04</p><h2>PRODUCTS<br />DESERVE<br /><em>WORLDS.</em></h2><p>Premium D2C and FMCG storytelling built around the product — not generic ad templates.</p></div>
+        <div className="product-stage" aria-hidden="true">
+          <div className="parallax-shape product-disc" /><div className="parallax-shape product-podium" /><div className="parallax-shape product-window"><span>AD CROP / 4:5</span></div><div className="parallax-shape product-bar" />
+        </div>
+        <div className="product-meta technical">D2C / FMCG / LAUNCH / PERFORMANCE / FILM</div>
+      </section>
+
+      <section className="previs chapter" data-nav="light">
+        <div className="previs-head"><p className="scene-kicker dark-kicker">PREVISUALIZATION / 05</p><h2>SEE THE FILM<br />BEFORE THE FILM.</h2><p>Storyboard thinking, camera logic and visual continuity before production becomes expensive.</p></div>
+        <div className="previs-grid">
+          {[
+            ['CAM 01', '35MM', 'PUSH IN'], ['CAM 02', '50MM', 'LOCKED'], ['CAM 03', '24MM', 'TRACK R'], ['CAM 04', '85MM', 'HOLD'],
+            ['CAM 05', '35MM', 'ORBIT'], ['CAM 06', '50MM', 'DOLLY'], ['CAM 07', '24MM', 'WIDE'], ['CAM 08', '85MM', 'DETAIL']
+          ].map((cell, index) => <div className="previs-cell" key={cell[0]}><span className={`previs-art art-${index + 1}`} /><div className="technical"><b>{cell[0]}</b><span>{cell[1]}</span><span>{cell[2]}</span><span>FRAME {String(index + 1).padStart(2, '0')}</span></div></div>)}
+        </div>
+        <div className="previs-side technical">SEQUENCE 02 / STORYBOARD SYSTEM / ACTIVE</div>
+      </section>
+
+      <section id="process" className="process chapter" data-nav="dark">
+        <div className="process-visual">
+          <p className="scene-kicker">HOW WE BUILD / 06</p>
+          <div className={`process-machine stage-${activeProcess + 1}`}>
+            <div className="process-ring" /><div className="process-ring inner" />
+            <div className="machine-node n1" /><div className="machine-node n2" /><div className="machine-node n3" /><div className="machine-node n4" /><div className="machine-node n5" />
+            <div className="machine-frame f1" /><div className="machine-frame f2" /><div className="machine-frame f3" />
+            <span className="machine-label technical">SYSTEM / {String(activeProcess + 1).padStart(2, '0')} / ACTIVE</span>
           </div>
         </div>
-      </section>
-
-      <section id="system" className="cream padded">
-        <div className="container">
-          <p className="eyebrow darkText reveal">How We Build</p>
-          <h2 className="reveal">From idea to cinematic execution.</h2>
-          <div className="processGrid lightProcess">
-            {process.map((item) => <div className="processCard reveal" key={item[0]}><span>{item[0]}</span><h3>{item[1]}</h3><p>{item[2]}</p></div>)}
-          </div>
+        <div className="process-copy">
+          <div className="process-line"><span className="process-line-fill" /></div>
+          {process.map((item, index) => <article className={`process-step ${activeProcess === index ? 'active' : ''}`} key={item[0]}><span>{item[0]}</span><h3>{item[1]}</h3><p>{item[2]}</p></article>)}
         </div>
       </section>
 
-      <section className="dark padded">
-        <div className="container">
-          <p className="eyebrow reveal">Who We Work With</p>
-          <h2 className="reveal">For brands and production teams building stories at scale.</h2>
-          <div className="cardGrid audienceGrid darkCards">
-            {audiences.map((item) => <div className="lightCard reveal" key={item[0]}><h3>{item[0]}</h3><p>{item[1]}</p></div>)}
-          </div>
+      <section className="spec-worlds chapter" data-nav="dark">
+        <p className="scene-kicker">SPEC WORLDS / 07</p>
+        <div className="spec-canvas">
+          {specWorlds.map((world, index) => <article className={`spec-frame spec-${index + 1}`} key={world[0]}><div className="spec-art"><span /></div><h2>{world[0]}</h2><p className="technical">{world[1]}</p></article>)}
         </div>
       </section>
 
-      <section className="cream padded faqSection">
-        <div className="container faqGrid">
-          <div className="reveal"><p className="eyebrow darkText">FAQ</p><h2>How CRL fits into a modern production workflow.</h2></div>
-          <div className="faqList reveal">
-            {faqs.map((item) => <details key={item[0]}><summary>{item[0]}<span>+</span></summary><p>{item[1]}</p></details>)}
-          </div>
+      <section className="audience chapter" data-nav="dark">
+        <div className="audience-head"><p className="scene-kicker">WHO WE WORK WITH / 08</p><h2>BUILT TO PLUG INTO<br />MODERN CREATIVE TEAMS.</h2></div>
+        <div className="audience-list">
+          {audiences.map((item, index) => <article key={item[0]}><span>0{index + 1}</span><h3>{item[0]}</h3><p>{item[1]}</p></article>)}
         </div>
       </section>
 
-      <section id="resources" className="cream padded newsletterSection">
-        <div className="container newsletterGrid">
-          <div className="reveal">
-            <p className="eyebrow darkText">Newsletter and Resources</p>
-            <h2>Get CRL notes on AI filmmaking, cinematic storytelling and creative systems.</h2>
-            <p className="bodyLarge">Drop your email to receive free resources, story frameworks, prompt systems, storyboard breakdowns and production notes. The backend workflow will be connected later.</p>
-          </div>
-          <form className="subscribeForm lightSubscribe reveal" action="/api/subscribe" method="post">
-            <label htmlFor="email">Email address</label>
-            <div className="subscribeRow">
-              <input id="email" name="email" type="email" placeholder="you@company.com" required />
-              <button className="button primary" type="submit">Subscribe</button>
-            </div>
-            <p className="formNote darkNote">Free resources for brands, agencies, production houses and AI filmmakers. No spam.</p>
-          </form>
-        </div>
+      <section className="resources chapter" data-nav="light">
+        <div><p className="scene-kicker dark-kicker">RESOURCES / FIELD NOTES</p><h2>AI FILMMAKING.<br />STORY SYSTEMS.<br />PRODUCTION NOTES.</h2></div>
+        <form className="resource-form" action="/api/subscribe" method="post"><label htmlFor="email">JOIN THE CRL FIELD NOTES</label><div><input id="email" name="email" type="email" placeholder="YOU@COMPANY.COM" required /><button type="submit">SUBSCRIBE →</button></div><p>No spam. Just useful creative systems, breakdowns and experiments.</p></form>
       </section>
 
-      <section id="audit" className="dark padded">
-        <div className="container auditGrid">
-          <div className="reveal"><p className="eyebrow">Start a Creative Build</p><h2>Have an idea, campaign, product or story that needs a cinematic world?</h2><p className="lede">CRL helps you shape it before production begins, from strategy and story to visual references, AI-generated frames, storyboards, prompts and content systems.</p></div>
-          <form className="auditForm reveal" action="mailto:hello@creativeroilab.com" method="post" encType="text/plain">
-            <input name="name" placeholder="Name" required />
-            <input name="company" placeholder="Brand, agency or production house" required />
-            <input name="website" placeholder="Website, Instagram or portfolio" required />
-            <select name="priority" defaultValue=""><option value="" disabled>What are you building?</option><option>Brand film</option><option>Campaign world</option><option>Storyboard or previsualization</option><option>Character or IP system</option><option>AI video production</option><option>Product storytelling</option></select>
-            <textarea name="brief" placeholder="Tell us about the idea, story or project." rows={5} required />
-            <button className="button primary wide" type="submit">Start a Creative Build</button>
-          </form>
-        </div>
+      <section className="faq chapter" data-nav="dark">
+        <div className="faq-title"><p className="scene-kicker">FAQ / 09</p><h2>HOW CRL FITS<br />THE WORKFLOW.</h2></div>
+        <div className="faq-list">{faqs.map((item) => <details key={item[0]}><summary>{item[0]}<span>+</span></summary><p>{item[1]}</p></details>)}</div>
       </section>
 
-      <footer className="footer"><div className="container"><strong>Creative ROI Lab</strong><span>Cinematic AI storytelling for brands, agencies and production houses.</span></div></footer>
+      <section id="start" className="final-cta chapter" data-nav="dark" onMouseEnter={() => setCursorLabel('START')} onMouseLeave={() => setCursorLabel('')}>
+        <div className="cta-fragments" aria-hidden="true"><i className="cta-fragment red" /><i className="cta-fragment blue" /><i className="cta-fragment violet" /><i className="cta-fragment orange" /><i className="cta-fragment green" /></div>
+        <div className="cta-frame">
+          <p className="technical">CRL / FINAL FRAME / BUILD MODE</p><h2>READY TO BUILD<br />YOUR NEXT WORLD?</h2><a href="mailto:hello@creativeroilab.com">START A CREATIVE BUILD →</a>
+        </div>
+        <footer><span>CREATIVE ROI LAB © 2026</span><span>AI CREATIVE STUDIO / CINEMATIC STORY SYSTEMS</span><a href="#top">BACK TO FRAME 001 ↑</a></footer>
+      </section>
     </main>
   );
 }
