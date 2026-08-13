@@ -1,7 +1,33 @@
 import Head from 'next/head';
 import { useEffect, useRef, useState } from 'react';
 
-const vimeoSource = 'https://player.vimeo.com/video/1209432165?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&muted=1&loop=1&background=1';
+const prototypeMedia = [
+  {
+    type: 'video',
+    src: 'https://svs.gsfc.nasa.gov/vis/a000000/a002700/a002709/a002709.mp4',
+    credit: 'NASA / GSFC — Blue Marble'
+  },
+  {
+    type: 'video',
+    src: 'https://svs.gsfc.nasa.gov/vis/a010000/a012000/a012086/Orion-1280viz-MASTER_high.webm',
+    credit: 'NASA / ESA / STScI — Orion Nebula'
+  },
+  {
+    type: 'video',
+    src: 'https://svs.gsfc.nasa.gov/vis/a030000/a030900/a030960/STScI-H-M16wide_1x-1920x1080.webm',
+    credit: 'NASA / ESA / STScI — Eagle Nebula'
+  },
+  {
+    type: 'image',
+    src: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/BEAUTIFUL_LANDSCAPE_ggu.jpg',
+    credit: 'Sasu photography — CC0'
+  },
+  {
+    type: 'image',
+    src: 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Landscape%2C_road%2C_clouds.jpg',
+    credit: 'Digitura — CC0'
+  }
+] as const;
 
 const work = [
   ['01', 'BRAND FILMS', 'STORY / FILM / AI'],
@@ -31,6 +57,14 @@ const faqs = [
   ['Do you build concepts or only execute AI video?', 'Both. We can enter at raw idea, approved script or production stage and build the missing creative layer.'],
   ['Can one creative world become multiple formats?', 'Yes. A single direction can extend into hero films, social edits, product visuals, pitch frames and repeatable campaign routes.']
 ];
+
+function Media({ index, className = '' }: { index: number; className?: string }) {
+  const media = prototypeMedia[index % prototypeMedia.length];
+  if (media.type === 'video') {
+    return <video className={className} src={media.src} autoPlay muted loop playsInline preload="metadata" aria-label={media.credit} />;
+  }
+  return <img className={className} src={media.src} alt="Prototype cinematic visual" loading="lazy" />;
+}
 
 export default function Home() {
   const root = useRef<HTMLElement | null>(null);
@@ -82,36 +116,23 @@ export default function Home() {
         if (reduceMotion) return;
 
         gsap.to('.ambient-grid', { backgroundPosition: '90px 62px', duration: 24, repeat: -1, ease: 'none' });
-        gsap.to('.experience-orbit', { rotate: 360, duration: 18, repeat: -1, ease: 'none' });
-        gsap.to('.drift-type-a', { xPercent: 7, yPercent: -5, rotate: 1.5, duration: 7, yoyo: true, repeat: -1, ease: 'sine.inOut' });
-        gsap.to('.drift-type-b', { xPercent: -5, yPercent: 6, rotate: -1, duration: 8.5, yoyo: true, repeat: -1, ease: 'sine.inOut' });
-        gsap.to('.drift-frame-a', { y: -20, rotate: 3, duration: 5.2, yoyo: true, repeat: -1, ease: 'sine.inOut' });
-        gsap.to('.drift-frame-b', { y: 17, rotate: -4, duration: 6.4, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+        gsap.to('.hero-media-a', { y: -18, rotate: -1.5, duration: 7.2, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+        gsap.to('.hero-media-b', { y: 20, rotate: 2, duration: 8.4, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+        gsap.to('.drift-type-a', { xPercent: 5, yPercent: -4, rotate: 1, duration: 7.5, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+        gsap.to('.drift-type-b', { xPercent: -4, yPercent: 5, rotate: -0.8, duration: 8.8, yoyo: true, repeat: -1, ease: 'sine.inOut' });
 
         const hero = gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: '+=145%', scrub: 1.1 } });
         hero
-          .to('.type-build', { xPercent: -42, rotate: -4, opacity: 0.1 }, 0)
-          .to('.type-cinematic', { scale: 1.18, yPercent: -5, letterSpacing: '-0.075em' }, 0)
-          .to('.type-worlds', { xPercent: 38, rotate: 3, opacity: 0.16 }, 0)
-          .to('.hero-portal', { scale: 5.8, opacity: 0.95, borderRadius: 0 }, 0.22)
-          .to('.view-experience', { y: -30, opacity: 0 }, 0.12);
+          .to('.type-build', { xPercent: -32, opacity: 0.08 }, 0)
+          .to('.type-cinematic', { scale: 1.15, letterSpacing: '-0.075em' }, 0)
+          .to('.type-worlds', { xPercent: 28, opacity: 0.12 }, 0)
+          .to('.hero-media-a', { xPercent: -20, scale: 1.14 }, 0)
+          .to('.hero-media-b', { xPercent: 18, scale: 1.1 }, 0)
+          .to('.hero-scroll-cue', { y: -20, opacity: 0 }, 0.1);
 
-        gsap.to('.story-ribbon', {
-          xPercent: -38,
-          ease: 'none',
-          scrollTrigger: { trigger: '.manifesto', start: 'top bottom', end: 'bottom top', scrub: 1 }
-        });
-        gsap.to('.story-ribbon.back', {
-          xPercent: 30,
-          ease: 'none',
-          scrollTrigger: { trigger: '.manifesto', start: 'top bottom', end: 'bottom top', scrub: 1.2 }
-        });
-        gsap.fromTo('.manifesto-focus', { scale: 0.78, rotate: -6 }, {
-          scale: 1.08,
-          rotate: 0,
-          ease: 'none',
-          scrollTrigger: { trigger: '.manifesto', start: 'top 80%', end: 'bottom 30%', scrub: 1 }
-        });
+        gsap.to('.story-ribbon', { xPercent: -38, ease: 'none', scrollTrigger: { trigger: '.manifesto', start: 'top bottom', end: 'bottom top', scrub: 1 } });
+        gsap.to('.story-ribbon.back', { xPercent: 30, ease: 'none', scrollTrigger: { trigger: '.manifesto', start: 'top bottom', end: 'bottom top', scrub: 1.2 } });
+        gsap.fromTo('.manifesto-focus', { scale: 0.82, rotate: -4 }, { scale: 1.04, rotate: 0, ease: 'none', scrollTrigger: { trigger: '.manifesto', start: 'top 80%', end: 'bottom 30%', scrub: 1 } });
 
         if (desktop) {
           const panels = gsap.utils.toArray<HTMLElement>('.work-panel');
@@ -132,52 +153,27 @@ export default function Home() {
           });
           panels.forEach((panel) => {
             const title = panel.querySelector('.work-title-object');
-            gsap.fromTo(panel, { opacity: 0.38 }, {
-              opacity: 1,
-              scrollTrigger: { trigger: panel, containerAnimation: workTween, start: 'left 72%', end: 'right 28%', scrub: true }
-            });
+            gsap.fromTo(panel, { opacity: 0.38 }, { opacity: 1, scrollTrigger: { trigger: panel, containerAnimation: workTween, start: 'left 72%', end: 'right 28%', scrub: true } });
             if (title) gsap.fromTo(title, { xPercent: 12 }, { xPercent: -9, scrollTrigger: { trigger: panel, containerAnimation: workTween, start: 'left right', end: 'right left', scrub: true } });
           });
         }
 
         gsap.to('.cap-type-river', { xPercent: -22, ease: 'none', scrollTrigger: { trigger: '.capabilities', start: 'top bottom', end: 'bottom top', scrub: 1 } });
-        gsap.to('.product-giant-type', { xPercent: -16, rotate: -3, ease: 'none', scrollTrigger: { trigger: '.product', start: 'top bottom', end: 'bottom top', scrub: 1 } });
+        gsap.to('.product-giant-type', { xPercent: -16, rotate: -2, ease: 'none', scrollTrigger: { trigger: '.product', start: 'top bottom', end: 'bottom top', scrub: 1 } });
         gsap.to('.previs-type-object', { xPercent: 18, ease: 'none', scrollTrigger: { trigger: '.previs', start: 'top bottom', end: 'bottom top', scrub: 1 } });
 
-        gsap.from('.previs-cell', {
-          clipPath: 'inset(48% 48% 48% 48%)',
-          opacity: 0,
-          stagger: 0.07,
-          scrollTrigger: { trigger: '.previs-grid', start: 'top 76%', end: 'center 45%', scrub: 1 }
-        });
+        gsap.from('.previs-cell', { clipPath: 'inset(48% 48% 48% 48%)', opacity: 0, stagger: 0.07, scrollTrigger: { trigger: '.previs-grid', start: 'top 76%', end: 'center 45%', scrub: 1 } });
 
         gsap.utils.toArray<HTMLElement>('.process-step').forEach((step, index) => {
-          ScrollTrigger.create({
-            trigger: step,
-            start: 'top center',
-            end: 'bottom center',
-            onToggle: (self) => self.isActive && setActiveProcess(index)
-          });
+          ScrollTrigger.create({ trigger: step, start: 'top center', end: 'bottom center', onToggle: (self) => self.isActive && setActiveProcess(index) });
         });
         gsap.to('.process-orbit', { rotate: 240, ease: 'none', scrollTrigger: { trigger: '.process', start: 'top bottom', end: 'bottom top', scrub: 1 } });
 
         gsap.utils.toArray<HTMLElement>('.spec-frame').forEach((frame, index) => {
-          gsap.fromTo(frame, { y: 80 + index * 25, rotate: index % 2 ? 5 : -5 }, {
-            y: -35,
-            rotate: index % 2 ? 1.5 : -1.5,
-            ease: 'none',
-            scrollTrigger: { trigger: '.spec-worlds', start: 'top bottom', end: 'bottom top', scrub: 1.1 }
-          });
+          gsap.fromTo(frame, { y: 80 + index * 25, rotate: index % 2 ? 5 : -5 }, { y: -35, rotate: index % 2 ? 1.5 : -1.5, ease: 'none', scrollTrigger: { trigger: '.spec-worlds', start: 'top bottom', end: 'bottom top', scrub: 1.1 } });
         });
 
-        gsap.from('.cta-piece', {
-          x: () => gsap.utils.random(-330, 330),
-          y: () => gsap.utils.random(-220, 220),
-          rotate: () => gsap.utils.random(-35, 35),
-          opacity: 0,
-          stagger: 0.06,
-          scrollTrigger: { trigger: '.final-cta', start: 'top 80%', end: 'center 55%', scrub: 1 }
-        });
+        gsap.fromTo('.cta-visual', { scale: 0.82, opacity: 0.18 }, { scale: 1.08, opacity: 0.42, ease: 'none', scrollTrigger: { trigger: '.final-cta', start: 'top bottom', end: 'bottom bottom', scrub: 1 } });
       }, root);
 
       const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-nav]'));
@@ -200,8 +196,8 @@ export default function Home() {
           dotX?.(event.clientX); dotY?.(event.clientY); followX?.(event.clientX); followY?.(event.clientY);
           const nx = event.clientX / window.innerWidth - 0.5;
           const ny = event.clientY / window.innerHeight - 0.5;
-          mouseObjects.forEach((object, index) => gsap.to(object, { x: nx * (7 + index * 2), y: ny * (5 + index * 1.5), duration: 0.8, overwrite: true }));
-          gsap.to('.hero-glow', { x: nx * 80, y: ny * 55, duration: 1, overwrite: true });
+          mouseObjects.forEach((object, index) => gsap.to(object, { x: nx * (6 + index * 2), y: ny * (5 + index * 1.4), duration: 0.8, overwrite: true }));
+          gsap.to('.hero-glow', { x: nx * 72, y: ny * 50, duration: 1, overwrite: true });
         };
         window.addEventListener('mousemove', moveHandler, { passive: true });
       }
@@ -237,7 +233,9 @@ export default function Home() {
 
       <section id="top" className="hero chapter" data-nav="dark">
         <div className="ambient-grid" /><div className="hero-glow" />
-        <div className="hero-meta technical"><span>CREATIVE ROI LAB</span><span>FRAME 0001 / STORY ACTIVE</span></div>
+
+        <figure className="hero-media hero-media-a mouse-object" aria-hidden="true"><Media index={1} /><span /></figure>
+        <figure className="hero-media hero-media-b mouse-object" aria-hidden="true"><Media index={3} /><span /></figure>
 
         <div className="hero-type" aria-label="We build cinematic worlds">
           <span className="type-object type-build drift-type-a">WE BUILD</span>
@@ -245,18 +243,10 @@ export default function Home() {
           <span className="type-object type-worlds drift-type-b">WORLDS.</span>
         </div>
 
-        <div className="hero-frame frame-one drift-frame-a mouse-object"><span>STORY / 01</span></div>
-        <div className="hero-frame frame-two drift-frame-b mouse-object"><span>WORLD / 02</span></div>
-        <div className="hero-portal mouse-object" />
-
-        <button className="view-experience" type="button" onClick={() => setExperienceOpen(true)} onMouseEnter={() => setCursorLabel('VIEW')} onMouseLeave={() => setCursorLabel('')}>
-          <span className="experience-orbit" aria-hidden="true" />
-          <span className="view-small technical">CLICK TO VIEW</span>
-          <strong>CINEMATIC<br />EXPERIENCE</strong>
-          <span className="view-arrow">↗</span>
+        <button className="hero-scroll-cue" type="button" onClick={() => setExperienceOpen(true)} aria-label="View cinematic experience">
+          <span className="mouse-icon" aria-hidden="true"><i /></span>
+          <small>VIEW EXPERIENCE</small>
         </button>
-
-        <div className="hero-foot technical"><span>AI CREATIVE STUDIO</span><span>SCROLL — THE STORY CONTINUES ↓</span></div>
       </section>
 
       <section className="manifesto chapter" data-nav="dark">
@@ -275,14 +265,15 @@ export default function Home() {
             <article className="work-panel" key={item[0]}>
               <div className="work-title-object">{item[1]}</div>
               <div className="work-frame">
-                <span className="work-frame-inner" /><span className="work-frame-line" /><span className="work-frame-dot" />
-                <div className="work-frame-caption technical">CRL / FRAME {String(24 + index * 7).padStart(3, '0')}</div>
+                <Media index={index} className="work-media" />
+                <span className="work-frame-inner" />
+                <div className="media-credit technical">{prototypeMedia[index].credit}</div>
               </div>
               <div className="work-meta"><span>{item[0]}</span><strong>{item[1]}</strong><small>{item[2]}</small></div>
             </article>
           ))}
         </div>
-        <div className="work-edge technical">SELECTED WORK / KEEP SCROLLING →</div>
+        <div className="work-edge technical">PROTOTYPE MEDIA / SCROLL →</div>
       </section>
 
       <section id="capabilities" className="capabilities chapter" data-nav="dark">
@@ -306,11 +297,8 @@ export default function Home() {
 
       <section className="product chapter" data-nav="dark">
         <div className="product-giant-type" aria-hidden="true">PRODUCTS DESERVE WORLDS.</div>
-        <div className="product-copy">
-          <span className="technical">PRODUCT STORYTELLING / 04</span>
-          <h2>THE PRODUCT<br />BECOMES THE<br /><em>MAIN CHARACTER.</em></h2>
-        </div>
-        <div className="product-stage" aria-hidden="true"><i className="product-disc" /><i className="product-frame" /><i className="product-plane" /><i className="product-line" /></div>
+        <div className="product-copy"><span className="technical">PRODUCT STORYTELLING / 04</span><h2>THE PRODUCT<br />BECOMES THE<br /><em>MAIN CHARACTER.</em></h2></div>
+        <div className="product-stage"><div className="product-media"><Media index={4} /></div><i className="product-disc" /><i className="product-frame" /><i className="product-line" /></div>
       </section>
 
       <section className="previs chapter" data-nav="light">
@@ -324,15 +312,7 @@ export default function Home() {
       </section>
 
       <section id="process" className="process chapter" data-nav="dark">
-        <div className="process-visual">
-          <span className="technical">HOW WE BUILD / 06</span>
-          <div className={`process-machine stage-${activeProcess + 1}`}>
-            <div className="process-orbit" /><div className="process-orbit inner" />
-            <i className="process-node n1" /><i className="process-node n2" /><i className="process-node n3" /><i className="process-node n4" /><i className="process-node n5" />
-            <i className="process-frame p1" /><i className="process-frame p2" /><i className="process-frame p3" />
-            <strong>{process[activeProcess][1]}</strong>
-          </div>
-        </div>
+        <div className="process-visual"><span className="technical">HOW WE BUILD / 06</span><div className={`process-machine stage-${activeProcess + 1}`}><div className="process-orbit" /><div className="process-orbit inner" /><i className="process-node n1" /><i className="process-node n2" /><i className="process-node n3" /><i className="process-node n4" /><i className="process-node n5" /><i className="process-frame p1" /><i className="process-frame p2" /><i className="process-frame p3" /><strong>{process[activeProcess][1]}</strong></div></div>
         <div className="process-copy">{process.map((item, index) => <article className={`process-step ${activeProcess === index ? 'active' : ''}`} key={item[0]}><span>{item[0]}</span><h3>{item[1]}</h3></article>)}</div>
       </section>
 
@@ -340,9 +320,7 @@ export default function Home() {
         <span className="technical spec-label">SPEC WORLDS / 07</span>
         <div className="spec-backtype" aria-hidden="true">WORLDS&nbsp;WORLDS&nbsp;WORLDS</div>
         <div className="spec-canvas">
-          <article className="spec-frame spec-1"><div className="spec-art"><span /></div><h2>NEON SUTRA</h2><p className="technical">ORIGINAL IP / WORLD 01</p></article>
-          <article className="spec-frame spec-2"><div className="spec-art"><span /></div><h2>MYTHIC SEQUENCE</h2><p className="technical">PREVIS / WORLD 02</p></article>
-          <article className="spec-frame spec-3"><div className="spec-art"><span /></div><h2>PRODUCT RITUAL</h2><p className="technical">BRAND FILM / WORLD 03</p></article>
+          {['NEON SUTRA', 'MYTHIC SEQUENCE', 'PRODUCT RITUAL'].map((title, index) => <article className={`spec-frame spec-${index + 1}`} key={title}><div className="spec-art"><Media index={index + 1} /></div><h2>{title}</h2><p className="technical">PROTOTYPE WORLD / 0{index + 1}</p></article>)}
         </div>
       </section>
 
@@ -357,19 +335,20 @@ export default function Home() {
       </section>
 
       <section id="start" className="final-cta chapter" data-nav="dark" onMouseEnter={() => setCursorLabel('START')} onMouseLeave={() => setCursorLabel('')}>
-        <div className="cta-pieces" aria-hidden="true"><i className="cta-piece one" /><i className="cta-piece two" /><i className="cta-piece three" /><i className="cta-piece four" /><i className="cta-piece five" /></div>
-        <div className="cta-frame"><span className="technical">FINAL FRAME / BUILD MODE</span><h2>READY TO BUILD<br /><em>YOUR NEXT WORLD?</em></h2><a href="mailto:hello@creativeroilab.com">START A CREATIVE BUILD →</a></div>
-        <footer><span>CREATIVE ROI LAB © 2026</span><span>CINEMATIC STORY SYSTEMS</span><a href="#top">BACK TO FRAME 001 ↑</a></footer>
+        <div className="cta-visual" aria-hidden="true"><Media index={0} /></div>
+        <div className="cta-minimal"><h2>BUILD THE<br /><em>NEXT WORLD.</em></h2><a href="mailto:hello@creativeroilab.com">START A CREATIVE BUILD ↗</a></div>
+        <div className="cta-bottom technical"><span>CRL © 2026</span><a href="#top">↑</a></div>
       </section>
 
       <div className={`experience-overlay ${experienceOpen ? 'open' : ''}`} aria-hidden={!experienceOpen}>
         <button className="experience-close" type="button" onClick={() => setExperienceOpen(false)}>CLOSE ×</button>
-        <div className="experience-title"><span className="technical">CRL / CINEMATIC EXPERIENCE</span><strong>ENTER THE<br /><em>WORLD.</em></strong></div>
-        <div className="experience-film"><iframe src={vimeoSource} frameBorder="0" allow="autoplay; fullscreen; picture-in-picture" title="CRL cinematic film" /></div>
-        <div className="experience-strip" aria-hidden="true">
-          <div><span>01</span><b>FILM</b></div><div><span>02</span><b>CHARACTER</b></div><div><span>03</span><b>WORLD</b></div><div><span>04</span><b>PRODUCT</b></div><div><span>05</span><b>PREVIS</b></div><div><span>06</span><b>SYSTEM</b></div>
+        <div className="experience-heading"><span className="technical">PROTOTYPE CINEMATIC EXPERIENCE</span><strong>A WORLD<br /><em>IN MOTION.</em></strong></div>
+        <div className="experience-reel">
+          <figure className="reel-main"><Media index={1} /><figcaption>{prototypeMedia[1].credit}</figcaption></figure>
+          <figure className="reel-small reel-top"><Media index={3} /><figcaption>{prototypeMedia[3].credit}</figcaption></figure>
+          <figure className="reel-small reel-bottom"><Media index={2} /><figcaption>{prototypeMedia[2].credit}</figcaption></figure>
         </div>
-        <p className="experience-note technical">THE MEDIA FRAMES ARE READY FOR CRL FILMS, CHARACTER IMAGES AND PROJECT STILLS AS THE LIBRARY GROWS.</p>
+        <p className="experience-note">Temporary public/CC0 prototype media. Every frame can later be replaced by CRL films, characters, products and storyboards.</p>
       </div>
     </main>
   );
